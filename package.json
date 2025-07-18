@@ -1,0 +1,15 @@
+{
+  "name": "mibauu-backend",
+  "version": "1.0.0",
+  "description": "api of mibauu project",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "supabase:deploy": "npx supabase functions deploy",
+    "supabase:login": "npx supabase login",
+    "supabase:create": "npx supabase functions new"
+  },
+  "devDependencies": {
+    "supabase": "^2.31.4"
+  }
+}
