@@ -4,9 +4,15 @@
 
 ## Steps to set up project in local
 
-1. Clone repository in local environment.
-2. run `yarn install` command^
-3. run `yarn supabase:login` command and follow steps to login through the browser
+1. Intall docker
+2. Intall Deno extension in VS Code
+2. Clone repository in local environment.
+3. run `yarn install` command
+4. run `yarn supabase:login` command and follow steps to login through the browser
+5. run `yarn supabase:list` command and take project ID
+6. run `yarn supabase:link -- projectId` command to link project
+
+If any issue please take a lokk at oficial Doc https://supabase.com/docs/guides/functions/deploy
 
 Now project is ready to modify, create and publish new functions
 
@@ -21,3 +27,8 @@ Developer can deploy only one specific function with `yarn supabase:deploy -- my
 ## Publish all functions
 
 Developer can deploy all function with next command `yarn supabase:deploy`
+
+## Star server locally to test functions
+
+2. run `yarn supabase:start` command and wait until all data is
+3. run `yarn supabase:local` command to init local server

@@ -7,9 +7,15 @@
   "scripts": {
     "supabase:deploy": "npx supabase functions deploy",
     "supabase:login": "npx supabase login",
-    "supabase:create": "npx supabase functions new"
+    "supabase:create": "npx supabase functions new",
+    "supabase:start": "npx supabase start",
+    "supabase:stop": "npx supabase stop",
+    "supabase:local": "npx supabase functions serve --no-verify-jwt",
+    "supabase:list": "npx supabase projects list",
+    "supabase:link": "npx supabase link --project-ref"
   },
   "devDependencies": {
+    "@types/deno": "^2.3.0",
     "supabase": "^2.31.4"
   }
 }
