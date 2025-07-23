@@ -15,16 +15,16 @@ Deno.serve((req) => {
   try {
     switch (req.method) {
       case "GET": {
-        return getProducts(req);
+        return getOffers(req);
       }
       case "POST": {
-        return postProduct(req);
+        return postOffer(req);
       }
       case "PUT": {
-        return putProduct(req);
+        return putOffer(req);
       }
       case "DELETE": {
-        return deleteProduct(req);
+        return deleteOffer(req);
       }
       default:
         return new Response(
@@ -50,16 +50,16 @@ Deno.serve((req) => {
   }
 });
 
-const getProducts = async (req: Request) => {
+const getOffers = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await supabase.from("offer").select("*");
     if (error) {
       throw error;
     }
     return sendSuccessResponse(data);
   } else {
-    const { data, error } = await supabase.from("products").select("*").eq(
+    const { data, error } = await supabase.from("offer").select("*").eq(
       "id",
       id,
     );
@@ -70,10 +70,10 @@ const getProducts = async (req: Request) => {
   }
 };
 
-const postProduct = async (req: Request) => {
+const postOffer = async (req: Request) => {
   const body = await req.json();
   const { data, error } = await supabase
-    .from("products")
+    .from("offer")
     .insert([body])
     .select();
 
@@ -82,26 +82,26 @@ const postProduct = async (req: Request) => {
   return sendSuccessResponse(data, 201);
 };
 
-const putProduct = async (req: Request) => {
+const putOffer = async (req: Request) => {
   const id = getIdFromUrl(req);
   const body = await req.json();
 
-  if (!id) return sendErrorResponse("id is required to update product");
+  if (!id) return sendErrorResponse("id is required to update category");
 
-  const { data: product, error: errorProduct } = await supabase.from(
-    "products",
+  const { data: offer, error: errorOffer } = await supabase.from(
+    "offer",
   ).select("id").eq("id", id);
 
-  if (errorProduct) {
-    throw errorProduct;
+  if (errorOffer) {
+    throw errorOffer;
   }
 
-  if (!product.length) {
-    return sendErrorResponse(`Product id: ${id} does not exist`);
+  if (!offer.length) {
+    return sendErrorResponse(`Offer id: ${id} does not exist`);
   }
 
   const { data, error } = await supabase
-    .from("products")
+    .from("offer")
     .update(body)
     .eq("id", id)
     .select();
@@ -111,24 +111,24 @@ const putProduct = async (req: Request) => {
   return sendSuccessResponse(data);
 };
 
-const deleteProduct = async (req: Request) => {
+const deleteOffer = async (req: Request) => {
   const id = getIdFromUrl(req);
 
-  if (!id) return sendErrorResponse("id is required to delete product");
+  if (!id) return sendErrorResponse("id is required to delete offer");
 
-  const { data: product, error: errorProduct } = await supabase.from(
-    "products",
+  const { data: offer, error: errorOffer } = await supabase.from(
+    "offer",
   ).select("id").eq("id", id);
 
-  if (errorProduct) {
-    throw errorProduct;
+  if (errorOffer) {
+    throw errorOffer;
   }
 
-  if (!product.length) {
-    return sendErrorResponse(`Product id: ${id} does not exist`);
+  if (!offer.length) {
+    return sendErrorResponse(`Offer id: ${id} does not exist`);
   }
   const { error } = await supabase
-    .from("products")
+    .from("offer")
     .delete()
     .eq("id", id);
 

@@ -17,21 +17,15 @@ Deno.serve((req) => {
       case "GET": {
         return getProducts(req);
       }
-      case "POST": {
-        return postProduct(req);
-      }
       case "PUT": {
         return putProduct(req);
-      }
-      case "DELETE": {
-        return deleteProduct(req);
       }
       default:
         return new Response(
           JSON.stringify({ error: "Method is not allowed" }),
           {
             status: 405,
-            headers: { "Allow": "GET, POST, PUT" },
+            headers: { "Allow": "GET, PUT" },
           },
         );
     }
@@ -53,16 +47,24 @@ Deno.serve((req) => {
 const getProducts = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await await supabase
+      .from("products")
+      .select("*")
+      .eq("enable", true)
+      .gt("stock", 0);
+
     if (error) {
       throw error;
     }
     return sendSuccessResponse(data);
   } else {
-    const { data, error } = await supabase.from("products").select("*").eq(
-      "id",
-      id,
-    );
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .eq("enable", true)
+      .gt("stock", 0);
+
     if (error) {
       throw error;
     }
@@ -70,27 +72,17 @@ const getProducts = async (req: Request) => {
   }
 };
 
-const postProduct = async (req: Request) => {
-  const body = await req.json();
-  const { data, error } = await supabase
-    .from("products")
-    .insert([body])
-    .select();
-
-  if (error) return sendErrorResponse(error.message);
-
-  return sendSuccessResponse(data, 201);
-};
-
 const putProduct = async (req: Request) => {
   const id = getIdFromUrl(req);
-  const body = await req.json();
+  const { stock } = await req.json();
 
-  if (!id) return sendErrorResponse("id is required to update product");
+  if (!id || !stock || !Number.isInteger(stock)) {
+    return sendErrorResponse("id and quantity are required to update product");
+  }
 
   const { data: product, error: errorProduct } = await supabase.from(
     "products",
-  ).select("id").eq("id", id);
+  ).select("id, stock").eq("id", id);
 
   if (errorProduct) {
     throw errorProduct;
@@ -102,37 +94,11 @@ const putProduct = async (req: Request) => {
 
   const { data, error } = await supabase
     .from("products")
-    .update(body)
+    .update({ stock: product[0].stock - stock })
     .eq("id", id)
     .select();
 
   if (error) return sendErrorResponse(error.message);
 
   return sendSuccessResponse(data);
-};
-
-const deleteProduct = async (req: Request) => {
-  const id = getIdFromUrl(req);
-
-  if (!id) return sendErrorResponse("id is required to delete product");
-
-  const { data: product, error: errorProduct } = await supabase.from(
-    "products",
-  ).select("id").eq("id", id);
-
-  if (errorProduct) {
-    throw errorProduct;
-  }
-
-  if (!product.length) {
-    return sendErrorResponse(`Product id: ${id} does not exist`);
-  }
-  const { error } = await supabase
-    .from("products")
-    .delete()
-    .eq("id", id);
-
-  if (error) return sendErrorResponse(error.message);
-
-  return sendSuccessResponse({ success: true });
 };

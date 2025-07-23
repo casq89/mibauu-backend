@@ -4,8 +4,8 @@
 
 ## Steps to set up project in local
 
-1. Intall docker
-2. Intall Deno extension in VS Code
+1. Install docker
+2. Install Deno extension in VS Code
 2. Clone repository in local environment.
 3. run `yarn install` command
 4. run `yarn supabase:login` command and follow steps to login through the browser
