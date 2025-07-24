@@ -53,13 +53,17 @@ Deno.serve((req) => {
 const getProducts = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await supabase.from("products").select(
+      "*, category(name)",
+    );
     if (error) {
       throw error;
     }
     return sendSuccessResponse(data);
   } else {
-    const { data, error } = await supabase.from("products").select("*").eq(
+    const { data, error } = await supabase.from("products").select(
+      "*, category(name)",
+    ).eq(
       "id",
       id,
     );
@@ -72,6 +76,11 @@ const getProducts = async (req: Request) => {
 
 const postProduct = async (req: Request) => {
   const body = await req.json();
+
+  const { data: code, errorCode } = await supabase.rpc("get_next_product_code");
+  if (errorCode) return sendErrorResponse(errorCode.message);
+
+  body.code = code;
   const { data, error } = await supabase
     .from("products")
     .insert([body])
