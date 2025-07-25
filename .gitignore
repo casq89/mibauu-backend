@@ -4,3 +4,4 @@ node_modules
 Deno.env
 supabase/.temp/
 supabase/.branches/
+backup.dump
