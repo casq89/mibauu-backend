@@ -49,7 +49,7 @@ const getProducts = async (req: Request) => {
   if (id === undefined) {
     const { data, error } = await await supabase
       .from("products")
-      .select("*")
+      .select("*, category(name)")
       .eq("enable", true)
       .gt("stock", 0);
 
@@ -60,7 +60,7 @@ const getProducts = async (req: Request) => {
   } else {
     const { data, error } = await supabase
       .from("products")
-      .select("*")
+      .select("*, category(name)")
       .eq("id", id)
       .eq("enable", true)
       .gt("stock", 0);

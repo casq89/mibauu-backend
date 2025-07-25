@@ -54,7 +54,9 @@ Deno.serve((req) => {
 const getProducts = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from('products').select('*');
+    const { data, error } = await supabase
+      .from('products')
+      .select('*, category(name)');
     if (error) {
       throw error;
     }
@@ -62,7 +64,7 @@ const getProducts = async (req: Request) => {
   } else {
     const { data, error } = await supabase
       .from('products')
-      .select('*')
+      .select('*, category(name)')
       .eq('id', id);
     if (error) {
       throw error;
@@ -74,7 +76,6 @@ const getProducts = async (req: Request) => {
 const postProduct = async (req: Request) => {
   const formData = await req.formData();
   const image = formData.get('image') as File;
-  const code = formData.get('code') as string;
   const name = formData.get('name') as string;
   const description = formData.get('description') as string;
   const price = parseFloat(formData.get('price') as string);
@@ -102,6 +103,11 @@ const postProduct = async (req: Request) => {
     .getPublicUrl(filePath);
 
   const imageUrl = urlData.publicUrl;
+
+  const body = await req.json();
+
+  const { data: code, errorCode } = await supabase.rpc('get_next_product_code');
+  if (errorCode) return sendErrorResponse(errorCode.message);
 
   const { data, error } = await supabase
     .from('products')
