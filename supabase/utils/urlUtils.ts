@@ -1,3 +1,9 @@
+export const corsHeaders = {
+    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Headers":
+        "authorization, x-client-info, apikey, content-type",
+};
+
 export const getIdFromUrl = (req: Request) => {
     const url = new URL(req.url);
     const pathname = url.pathname;
@@ -13,6 +19,7 @@ export const sendSuccessResponse = (data: unknown, status = 200) => {
         {
             headers: {
                 "Content-Type": "application/json",
+                ...corsHeaders,
             },
             status,
         },
@@ -22,5 +29,12 @@ export const sendSuccessResponse = (data: unknown, status = 200) => {
 export const sendErrorResponse = (error: string, status = 400) => {
     return new Response(JSON.stringify({ error }), {
         status,
+        headers: { ...corsHeaders },
+    });
+};
+
+export const responseCoreHeaders = () => {
+    return new Response("ok", {
+        headers: corsHeaders,
     });
 };

@@ -2,6 +2,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import {
   getIdFromUrl,
+  responseCoreHeaders,
   sendErrorResponse,
   sendSuccessResponse,
 } from "../../utils/urlUtils.ts";
@@ -25,6 +26,9 @@ Deno.serve((req) => {
       }
       case "DELETE": {
         return deleteOffer(req);
+      }
+      case "OPTIONS": {
+        return responseCoreHeaders();
       }
       default:
         return new Response(

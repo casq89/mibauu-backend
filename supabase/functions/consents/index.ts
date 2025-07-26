@@ -1,6 +1,10 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { getIdFromUrl, sendSuccessResponse } from "../../utils/urlUtils.ts";
+import {
+  getIdFromUrl,
+  responseCoreHeaders,
+  sendSuccessResponse,
+} from "../../utils/urlUtils.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -12,6 +16,9 @@ Deno.serve((req) => {
     switch (req.method) {
       case "GET": {
         return getConsents(req);
+      }
+      case "OPTIONS": {
+        return responseCoreHeaders();
       }
       default:
         return new Response(
