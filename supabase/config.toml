@@ -358,3 +358,7 @@ verify_jwt = false
 [functions.mobile-categories]
 enabled = true
 verify_jwt = false
+
+[functions.mobile-consents]
+enabled = true
+verify_jwt = false

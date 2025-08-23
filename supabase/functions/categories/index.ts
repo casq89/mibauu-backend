@@ -57,7 +57,10 @@ Deno.serve((req) => {
 const getCategories = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from("category").select("*");
+    const { data, error } = await supabase.from("category").select("*").order(
+      "id",
+      { ascending: true },
+    );
     if (error) {
       throw error;
     }
