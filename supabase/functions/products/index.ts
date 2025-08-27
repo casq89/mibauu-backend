@@ -7,13 +7,12 @@ import {
   sendSuccessResponse,
 } from "../../utils/urlUtils.ts";
 import { v4 } from "https://esm.sh/v135/uuid@9.0.1/es2022/uuid.mjs";
+import { bucketName } from "../../utils/constants.ts";
 
 const supabase = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
   Deno.env.get("SUPABASE_ANON_KEY") ?? "",
 );
-
-const bucketName = "mibauu";
 
 Deno.serve((req) => {
   try {
@@ -209,8 +208,6 @@ const putProduct = async (req: Request) => {
     .select();
 
   if (error) return sendErrorResponse(error.message);
-
-  console.log("current product----", product);
 
   if (imageUrl) {
     const oldImageUrl = product[0].imagen_url;
