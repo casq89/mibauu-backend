@@ -47,11 +47,15 @@ Deno.serve((req) => {
 const getProducts = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await await supabase
+    const { data, error } = await supabase
       .from("products")
       .select("*, category(name)")
       .eq("enable", true)
-      .gt("stock", 0);
+      .gt("stock", 0)
+      .order(
+        "name",
+        { ascending: true },
+      );
 
     if (error) {
       throw error;

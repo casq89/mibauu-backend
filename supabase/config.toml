@@ -362,3 +362,7 @@ verify_jwt = false
 [functions.mobile-consents]
 enabled = true
 verify_jwt = false
+
+[functions.mobile-offer]
+enabled = true
+verify_jwt = false

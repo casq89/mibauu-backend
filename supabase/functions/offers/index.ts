@@ -60,7 +60,7 @@ const getOffers = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
     const { data, error } = await supabase.from("offer").select("*").order(
-      "name",
+      "id",
       { ascending: true },
     );
     if (error) {

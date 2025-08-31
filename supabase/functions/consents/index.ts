@@ -47,7 +47,10 @@ Deno.serve((req) => {
 const getConsents = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from("consent").select("*");
+    const { data, error } = await supabase.from("consent").select("*").order(
+      "id",
+      { ascending: true },
+    );
     if (error) {
       throw error;
     }

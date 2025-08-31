@@ -55,10 +55,14 @@ const getConsent = async (req: Request) => {
         return sendErrorResponse("id is required to get consent info");
     }
 
-    const { data, error } = await supabase.from("consent").select("*").eq(
-        "device_id",
-        device_id,
-    );
+    const { data, error } = await supabase.from("consent").select("*")
+        .eq(
+            "device_id",
+            device_id,
+        ).order(
+            "id",
+            { ascending: true },
+        );
     if (error) {
         throw error;
     }

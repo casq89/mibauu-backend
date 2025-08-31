@@ -40,10 +40,9 @@ Deno.serve((req) => {
 const getCategories = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase.from("category").select("*").eq(
-      "enable",
-      true,
-    );
+    const { data, error } = await supabase.from("category").select("*")
+      .eq("enable", true)
+      .order("id", { ascending: true });
     if (error) {
       throw error;
     }
