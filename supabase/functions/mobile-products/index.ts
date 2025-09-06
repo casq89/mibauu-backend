@@ -47,7 +47,7 @@ Deno.serve((req) => {
 const getProducts = async (req: Request) => {
   const id = getIdFromUrl(req);
   if (id === undefined) {
-    const { data, error } = await supabase
+    let query = supabase
       .from("products")
       .select("*, category(name)")
       .eq("enable", true)
@@ -56,6 +56,20 @@ const getProducts = async (req: Request) => {
         "name",
         { ascending: true },
       );
+
+    const { searchParams } = new URL(req.url);
+    const promotion = searchParams.get("promotion");
+    const category_id = searchParams.get("category_id");
+
+    if (promotion) {
+      query = query.eq("promotion", promotion);
+    }
+
+    if (category_id) {
+      query = query.eq("category_id", category_id);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw error;
