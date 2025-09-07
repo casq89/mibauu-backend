@@ -366,3 +366,11 @@ verify_jwt = false
 [functions.mobile-offer]
 enabled = true
 verify_jwt = false
+
+[functions.order-product]
+enabled = true
+verify_jwt = false
+
+[functions.order-detail]
+enabled = true
+verify_jwt = false
