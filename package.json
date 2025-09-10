@@ -18,5 +18,8 @@
     "@types/deno": "^2.3.0",
     "prettier": "^3.6.2",
     "supabase": "^2.31.8"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.2"
   }
 }

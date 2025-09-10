@@ -1,5 +1,5 @@
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
-import {createClient} from 'jsr:@supabase/supabase-js@2';
+import {createClient} from '@supabase/supabase-js';
 import {
   getIdFromUrl,
   responseCoreHeaders,
@@ -21,9 +21,9 @@ Deno.serve((req) => {
       case 'POST': {
         return postOrderProduct(req);
       }
-      //   case 'PUT': {
-      //     return putCategory(req);
-      //   }
+      case 'PUT': {
+        return putOrder(req);
+      }
       case 'DELETE': {
         return deleteOrderProduct(req);
       }
@@ -61,6 +61,7 @@ const getOrderProduct = async (req: Request) => {
     if (error) {
       throw error;
     }
+
     return sendSuccessResponse(data);
   } else {
     const {data, error} = await supabase
@@ -86,35 +87,35 @@ const postOrderProduct = async (req: Request) => {
   return sendSuccessResponse(data, 201);
 };
 
-// const putCategory = async (req: Request) => {
-//   const id = getIdFromUrl(req);
-//   const body = await req.json();
+const putOrder = async (req: Request) => {
+  const id = getIdFromUrl(req);
+  const body = await req.json();
 
-//   if (!id) return sendErrorResponse('id is required to update category');
+  if (!id) return sendErrorResponse('id is required to update order');
 
-//   const {data: category, error: errorCategory} = await supabase
-//     .from('category')
-//     .select('id')
-//     .eq('id', id);
+  const {data: order, error: errorOrder} = await supabase
+    .from('order_product')
+    .select('id')
+    .eq('id', id);
 
-//   if (errorCategory) {
-//     throw errorCategory;
-//   }
+  if (errorOrder) {
+    throw errorOrder;
+  }
 
-//   if (!category.length) {
-//     return sendErrorResponse(`Category id: ${id} does not exist`);
-//   }
+  if (!order.length) {
+    return sendErrorResponse(`Order id: ${id} does not exist`);
+  }
 
-//   const {data, error} = await supabase
-//     .from('category')
-//     .update(body)
-//     .eq('id', id)
-//     .select();
+  const {data, error} = await supabase
+    .from('order_product')
+    .update(body)
+    .eq('id', id)
+    .select();
 
-//   if (error) return sendErrorResponse(error.message);
+  if (error) return sendErrorResponse(error.message);
 
-//   return sendSuccessResponse(data);
-// };
+  return sendSuccessResponse(data);
+};
 
 const deleteOrderProduct = async (req: Request) => {
   const id = getIdFromUrl(req);
